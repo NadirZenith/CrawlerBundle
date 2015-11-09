@@ -1,0 +1,41 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="nz.crawler.handler.class">Nz\CrawlerBundle\Crawler\Handler</parameter>
+        <parameter key="nz.crawler.client.pool.class">Nz\CrawlerBundle\Client\ClientPool</parameter>
+        <!--<parameter key="nz.crawler.admin.link.controller">SonataAdminBundle:CRUD</parameter>-->
+        <!--<parameter key="nz.crawler.admin.translation_domain">NzCrawlerBundle</parameter>-->
+    </parameters>
+    
+    <services>
+        <service id="nz.crawler.handler" class="%nz.crawler.handler.class%">
+            <!--<argument>%doctrine.orm.entity_manager%</argument>-->
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            
+            <call method="setLinkManager">
+                <argument type="service" id="nz.crawler.link.manager" />
+            </call>
+            <call method="setPostManager">
+                <argument type="service" id="sonata.news.manager.post" />
+            </call>
+            
+            <!--
+            <argument />
+            <argument>%nz.crawler.admin.link.controller%</argument>
+
+            <call method="setTranslationDomain">
+                <argument>%nz.crawler.admin.translation_domain%</argument>
+            </call>
+            -->
+
+        </service>   
+        
+        <service id="nz.crawler.client.pool" class="%nz.crawler.client.pool.class%">
+
+        </service>   
+    </services>
+</container>

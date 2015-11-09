@@ -1,0 +1,103 @@
+{#
+
+This file is part of the Sonata package.
+
+(c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+
+{% if admin.isGranted('VIEW', object) and admin.hasRoute('show') %}
+    <a href="{{ admin.generateObjectUrl('show', object) }}" class="btn btn-sm btn-default view_link" title="{{ 'action_show'|trans({}, 'SonataAdminBundle') }}">
+        <i class="glyphicon glyphicon-zoom-in"></i>
+        {{ 'action_show'|trans({}, 'SonataAdminBundle') }}
+    </a>
+{% endif %}
+
+<a class="btn btn-sm" href="{{ admin.generateObjectUrl('clone', object) }}">clone</a>
+it works raw
+#}
+
+{#
+
+This file is part of the Sonata package.
+
+(c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+
+{#{% extends base_template %}#}
+
+{#{% block tab_menu %}{{ knp_menu_render(admin.sidemenu('list'), {'currentClass' : 'active', 'template': admin_pool.getTemplate('tab_menu_template')}, 'twig') }}{% endblock %}#}
+{#{% block tab_menu %}{{ knp_menu_render(admin.sidemenu(action), {'currentClass' : 'active', 'template': admin_pool.getTemplate('tab_menu_template')}, 'twig') }}{% endblock %}#}
+{#
+{% block list_table %}
+    
+{% endblock %}
+
+{% block list_filters_actions %}
+   
+{% endblock %}
+
+{% block list_filters %}
+   
+{% endblock %}
+
+
+#}
+{% extends 'SonataAdminBundle:CRUD:base_list.html.twig' %}
+
+{% block tab_menu %}
+    <p>
+    <div class="btn-group">
+        <a type="button" class="btn btn-default" href="{{ admin.generateUrl('crawl-indexes') }}">
+            <i class="fa fa-list"></i>
+            Crawl Clients Index
+        </a>
+        <a type="button" class="btn btn-default" href="{{ admin.generateUrl('crawl-links') }}">
+            <i class="fa fa-list"></i>
+            Crawl All Links
+        </a>
+        <a type="button" class="btn btn-default" href="{{ admin.generateUrl('dev') }}">
+            <i class="fa fa-list"></i>
+            Dev Action
+        </a>
+        <form method="get" action="{{ admin.generateUrl('crawl-url') }}">
+            <input type="text" name="url" size="60"/>
+            <label for="persist">
+                Persist
+                <input type="checkbox" name="persist" />
+            </label>
+            <button type="submit" class="btn btn-default">
+                <i class="fa fa-list"></i>
+                Crawl Url
+            </button>
+        </form>
+        {#            
+                <a type="button" class="btn {% if mode == 'list' %}btn-info active{% else %}btn-default{% endif %}" href="">
+                    <i class="fa fa-list"></i>
+                    List
+                </a>
+                <a type="button" class="btn {% if mode == 'item' %}btn-info active{% else %}btn-default{% endif %}" href="">
+                    <i class="fa fa-list"></i>
+                    Item
+                </a>
+                <a type="button" class="btn {% if mode == 'dev' %}btn-info active{% else %}btn-default{% endif %}" href="">
+                    <i class="fa fa-list"></i>
+                    Test regex
+                </a>
+                <a type="button" class="btn {% if mode == 'clientsEntityCrawler' %}btn-info active{% else %}btn-default{% endif %}" href="">
+                    <a type="button" class="btn {% if mode == 'clientsEntityCrawler' %}btn-info active{% else %}btn-default{% endif %}" href="{{ admin.generateUrl('clientsEntityCrawler') }}">
+                    <i class="fa fa-list"></i>
+                    clientsEntityCrawler
+                </a>
+        #}
+    </div>
+</p>
+
+{% endblock %}
+
