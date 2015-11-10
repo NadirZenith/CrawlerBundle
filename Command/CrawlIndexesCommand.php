@@ -45,21 +45,18 @@ class CrawlIndexesCommand extends ContainerAwareCommand
             $errors = array_merge($errors, $e);
         }
 
+        $output->writeln(sprintf('Clients: %s ', count($clients_indexes)));
 
-        $info = '';
+        $output->writeln(sprintf('New Links: %s ', count($links)));
         foreach ($links as $link) {
-            $info .= sprintf('<p>%s</p>', $link->getUrl());
+            $output->writeln(sprintf('Url: %s ', $link->getUrl()));
         }
 
-        $error = '';
+        $output->writeln(sprintf('Errors: %s ', count($errors)));
         foreach ($errors as $err) {
             $notes = $err->getNotes();
-            $error .= sprintf('<p>%s</p>', end($notes));
+            $output->writeln(sprintf('Note: %s ', end($notes)));
         }
-
-        $output->writeln(sprintf('Clients: %s ', count($clients_indexes)));
-        $output->writeln(sprintf('New Links: %s <br> %s', count($links), $info));
-        $output->writeln(sprintf('Errors: %s <br> %s', count($errors), $error));
     }
 
     /**
