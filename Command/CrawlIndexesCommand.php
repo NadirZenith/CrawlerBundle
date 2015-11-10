@@ -32,11 +32,12 @@ class CrawlIndexesCommand extends ContainerAwareCommand
         $handler = $this->getHandler();
         $clientPool = $this->getClientPool();
         $clients_indexes = $clientPool->getIndexClients();
+        $persist = $input->getOption('persist');
 
         $links = [];
         $errors = [];
         foreach ($clients_indexes as $client) {
-            $l = $handler->handleIndexClient($client, true);
+            $l = $handler->handleIndexClient($client, $persist);
 
             $links = array_merge($links, $l);
 
