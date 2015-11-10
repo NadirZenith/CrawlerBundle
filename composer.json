@@ -1,0 +1,15 @@
+{
+    "name": "nz/crawler-bundle",
+    "description": "Crawler bundle for symfony and sonata",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Nz\\CrawlerBundle\\": ""
+        }
+    },
+    "require": {
+        "php": ">=5.3.3",
+        "symfony/symfony": "~2.7,>=2.7.2",
+        "sonata-project/admin-bundle": "~2.4@dev"
+    }
+}
