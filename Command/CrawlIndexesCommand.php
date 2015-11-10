@@ -19,9 +19,9 @@ class CrawlIndexesCommand extends ContainerAwareCommand
      */
     public function configure()
     {
-        $this->setName('nz:crawl:links');
+        $this->setName('nz:crawl:indexes');
         $this->addOption('persist', null, InputOption::VALUE_OPTIONAL, 'persist', 0);
-        $this->setDescription('Crawl Links Command');
+        $this->setDescription('Crawl Indexes Command');
     }
 
     /**
