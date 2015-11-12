@@ -37,7 +37,7 @@ interface EntityClientInterface extends BaseClientInterface
     public function crawlToEntity($entity);
 
     /**
-     * @return string Client host
+     * @return void
      */
     public function afterEntityPersist($entity);
 }

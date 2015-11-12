@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of the Sonata Project package.
- *
- * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Nz\CrawlerBundle\Controller;
 
 use Sonata\AdminBundle\Controller\CRUDController as Controller;
@@ -19,7 +10,7 @@ use Nz\CrawlerBundle\Clients;
 /**
  * Class CRUDController.
  *
- * @author  Thomas Rabaix <thomas.rabaix@sonata-project.org>
+ * @author  nz
  */
 class LinkCRUDController extends Controller
 {
@@ -32,8 +23,6 @@ class LinkCRUDController extends Controller
         if (false === $this->admin->isGranted('LIST')) {
             throw new AccessDeniedException();
         }
-        $template = $this->admin->getTemplate('list');
-
 
         $datagrid = $this->admin->getDatagrid();
         $formView = $datagrid->getForm()->createView();
@@ -53,6 +42,8 @@ class LinkCRUDController extends Controller
     public function crawlIndexesAction(Request $request = null)
     {
 
+        $persist = $request->get('persist', false);
+
         $handler = $this->getHandler();
         $clientPool = $this->getClientPool();
 
@@ -60,8 +51,7 @@ class LinkCRUDController extends Controller
         $links = [];
         $errors = [];
         foreach ($clients_indexes as $client) {
-            $l = $handler->handleIndexClient($client, true);
-            /* $l = $handler->handleIndexClient($client, false); */
+            $l = $handler->handleIndexClient($client, $persist);
 
             $links = array_merge($links, $l);
 
@@ -106,16 +96,13 @@ class LinkCRUDController extends Controller
         }
 
         $handler = $this->getHandler();
-        $entity = $handler->handleEntityClient($client, true, true);
+        $entity = $handler->handleEntityClient($client, true);
 
         if (!$entity) {
             $notes = $link->getNotes();
             $error = end($notes);
 
             $this->addFlash('sonata_flash_error', sprintf('Error creating entity: %s', $error));
-        } elseif ($entity === true) {
-
-            $this->addFlash('sonata_flash_success', 'Entity already created');
         } else {
 
             $this->addFlash('sonata_flash_success', sprintf('Created entity with id %s', $entity->getId()));
@@ -129,6 +116,8 @@ class LinkCRUDController extends Controller
      */
     public function crawlLinksAction(Request $request = null)
     {
+        $persist = $request->get('persist', false);
+
         $linkManager = $this->getLinkManager();
 
         $handler = $this->getHandler();
@@ -142,7 +131,7 @@ class LinkCRUDController extends Controller
             $client = $clientPool->getEntityClientForLink($link);
 
             if ($client) {
-                $entity = $handler->handleEntityClient($client, true);
+                $entity = $handler->handleEntityClient($client, $persist);
 
                 if (!$entity) {
                     $notes = $link->getNotes();
@@ -182,15 +171,13 @@ class LinkCRUDController extends Controller
             $this->addFlash('sonata_flash_error', sprintf('No client for url: %s', $link->getUrl()));
             return new RedirectResponse($this->admin->generateUrl('list'));
         }
-        $entity = $handler->handleEntityClient($client, $persist, false);
+        $entity = $handler->handleEntityClient($client, $persist);
 
         if (!$entity) {
             $notes = $link->getNotes();
             $error = end($notes);
 
             $this->addFlash('sonata_flash_error', sprintf('Error creating entity: %s', $error));
-        } elseif ($entity === true) {
-            $this->addFlash('sonata_flash_info', 'Entity already created');
         } else {
             $this->addFlash('sonata_flash_success', sprintf('Created entity with id %s, title %s', $entity->getId(), $entity->getTitle()));
         }
@@ -226,71 +213,5 @@ class LinkCRUDController extends Controller
     private function getLinkManager()
     {
         return $this->get('nz.crawler.link.manager');
-    }
-
-    /**
-     * Get Link Manager
-     * 
-     * @return \Nz\CrawlerBundle\Entity\LinkManager
-     */
-    private function getMediaManager()
-    {
-        return $this->get('sonata.media.manager.media');
-    }
-
-    /**
-     * Dev action
-     * 
-     * return \Nz\CrawlerBundle\Entity\LinkManager
-     */
-    public function devProviderAction()
-    {
-
-        $mediaManager = $this->getMediaManager();
-        $em = $mediaManager->getEntityManager();
-
-        $url = 'http://rd3.videos.sapo.pt/playhtml?file=http://rd3.videos.sapo.pt/3YFfKmdLm4eL7KineB9C/mov/1';
-
-        $media = new \AppBundle\Entity\Media\Media();
-        $media->setBinaryContent($url);
-        $media->setContext('default');
-        $media->setEnabled(true);
-        $media->setProviderName('sonata.media.provider.sapo');
-
-        try {
-            $em->persist($media);
-            $em->flush();
-        } catch (Exception $ex) {
-            d($ex);
-        }
-        d($media);
-
-        die('... end ...');
-    }
-
-    public function devAction()
-    {
-        die('dev end');
-
-        $url = 'http://www.tabonito.pt/um-dos-bares-mais-bonitos-do-mundo-fica-nos-acores';
-        $persist = false;
-
-        $link = new \Nz\CrawlerBundle\Entity\Link();
-        $link->setUrl($url);
-
-        $clientPool = $this->getClientPool();
-        $handler = $this->getHandler();
-
-
-        $client = $clientPool->getEntityClientForLink($link);
-        if (!$client) {
-            die('no client');
-        }
-
-        $entity = $handler->handleEntityClient($client, $persist, false);
-        dd($entity);
-
-
-        die('end');
     }
 }

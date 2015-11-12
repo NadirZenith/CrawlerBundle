@@ -19,7 +19,7 @@ abstract class BaseIndexClient extends BaseClient implements IndexClientInterfac
      *
      * @var int
      */
-    private $current_page = 0;
+    protected $current_page = 0;
 
     /**
      * The maximum number of pages to crawl. 0 for all.
@@ -44,7 +44,7 @@ abstract class BaseIndexClient extends BaseClient implements IndexClientInterfac
 
     public function getNextIndexUrls()
     {
-        if ($this->limit_pages && $this->current_page >= $this->limit_pages) {
+        if ($this->limit_pages && $this->current_page > $this->limit_pages) {
             return false;
         }
 
@@ -63,12 +63,6 @@ abstract class BaseIndexClient extends BaseClient implements IndexClientInterfac
 
         return $urls;
     }
-
-    private function getIndexUrlFrom()
-    {
-        
-    }
-
 
     public function filterIndexUrls($urls)
     {

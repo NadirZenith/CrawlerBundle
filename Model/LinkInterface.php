@@ -3,9 +3,7 @@
 namespace Nz\CrawlerBundle\Model;
 
 /**
- * Description of Option
- *
- * @author tino
+ * @author nz
  */
 interface LinkInterface
 {

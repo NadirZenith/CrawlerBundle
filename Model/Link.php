@@ -3,15 +3,12 @@
 namespace Nz\CrawlerBundle\Model;
 
 /**
- * Description of Option
- *
- * @author tino
+ * @author nz
  */
 abstract class Link implements LinkInterface
 {
 
     protected $url;
-    /* protected $host; */
     protected $processed = false;
     protected $hasError = false;
     protected $notes;

@@ -32,12 +32,11 @@ class LinkAdmin extends Admin
 
     protected function configureRoutes(RouteCollection $collection)
     {
-        $collection->add('dev', 'dev');
-        //crawl indexes // on top
+        // on top
         $collection->add('crawl-indexes', 'crawl-indexes');
         $collection->add('crawl-links', 'crawl-links');
         $collection->add('crawl-url', 'crawl-url');
-        //crawl link // on list
+        // on list
         $collection->add('crawl-link', $this->getRouterIdParameter() . '/crawl');
     }
 
@@ -50,8 +49,6 @@ class LinkAdmin extends Admin
         '_page' => 1,
         '_per_page' => 320,
         '_sort_order' => 'DESC',
-        // name of the ordered field (default = the model's id field, if any)
-        '_sort_by' => 'crawledAt',
     );
 
     /**
@@ -81,7 +78,6 @@ class LinkAdmin extends Admin
             ->add('url', 'url')
             ->add('processed')
             ->add('hasError')
-            /* ->add('notes') */
             ->add('crawledAt')
             ->end()
 
@@ -92,15 +88,11 @@ class LinkAdmin extends Admin
      * {@inheritdoc}
      */
     protected function configureListFields(ListMapper $listMapper)
-    {//list
-        $object = $this->getSubject();
-        /* dd($object); */
+    {
+
         $listMapper
-            /* ->add('custom', 'string', array('template' => 'SonataNewsBundle:Admin:list_post_custom.html.twig', 'label' => 'Post')) */
             ->addIdentifier('url')
-            /* ->add('processed') */
             ->add('processed', null)
-            /*->add('processed', null, array('editable' => true))*/
             ->add('hasError', null, array('editable' => true))
             ->add('crawledAt')
             /*       custom actions     */
@@ -117,49 +109,15 @@ class LinkAdmin extends Admin
 
     /**
      * {@inheritdoc}
-     * List
      */
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
-        $that = $this;
 
         $datagridMapper
             ->add('url')
             ->add('processed')
             ->add('hasError')
         ;
-    }
-    /**
-     * {@inheritdoc}
-      } */
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function configureSideMenu(MenuItemInterface $menu, $action, AdminInterface $childAdmin = null)
-    {
-        if (!$childAdmin && !in_array($action, array('edit'))) {
-            return;
-        }
-        /*
-          $admin = $this->isChild() ? $this->getParent() : $this;
-
-          $id = $admin->getRequest()->get('id');
-
-          $menu->addChild(
-          $this->trans('sidemenu.link_edit_post'), array('uri' => $admin->generateUrl('edit', array('id' => $id)))
-          );
-
-          $menu->addChild(
-          $this->trans('sidemenu.link_view_comments'), array('uri' => $admin->generateUrl('sonata.news.admin.comment.list', array('id' => $id)))
-          );
-
-          if ($this->hasSubject() && $this->getSubject()->getId() !== null) {
-          $menu->addChild(
-          $this->trans('sidemenu.link_view_post'), array('uri' => $admin->getRouteGenerator()->generate('sonata_news_view', array('permalink' => $this->permalinkGenerator->generate($this->getSubject()))))
-          );
-          }
-         */
     }
 
     /**
@@ -168,21 +126,5 @@ class LinkAdmin extends Admin
     public function setLinkManager(LinkManagerInterface $linkManager)
     {
         $this->linkManager = $linkManager;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function prePersist($option)
-    {
-        
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function preUpdate($option)
-    {
-        
     }
 }

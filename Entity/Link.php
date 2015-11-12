@@ -7,7 +7,7 @@ use Nz\CrawlerBundle\Model\Link as BaseLink;
 /**
  * Description 
  *
- * @author tino
+ * @author nz
  */
 class Link extends BaseLink
 {
@@ -19,9 +19,10 @@ class Link extends BaseLink
 
     public function __construct()
     {
-        
+
         $this->setCrawledAt(new \DateTime());
     }
+
     public function getId()
     {
         return $this->id;
