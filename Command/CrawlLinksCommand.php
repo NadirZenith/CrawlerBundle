@@ -30,10 +30,10 @@ class CrawlLinksCommand extends BaseCrawlCommand
         $clientPool = $this->getClientPool();
 
         $persist = ($input->getOption('persist')) ? true : false;
-        $links = $linkManager->findLinksForProcess();
+        $links = $linkManager->findLinksForProcess(5);
         $errors = [];
         $entities = [];
-        ini_set('max_execution_time', 3000);
+        ini_set('max_execution_time', 0);
         foreach ($links as $link) {
             $client = $clientPool->getEntityClientForLink($link);
 
@@ -51,7 +51,9 @@ class CrawlLinksCommand extends BaseCrawlCommand
             }
         }
 
-        $output->writeln(sprintf('Links: %s, Success: %s, Errors: %s, persist: %d', count($links), count($entities), count($errors), $persist));
-        return;
+        $msg = sprintf('Links: %s, Success: %s, Errors: %s, persist: %d', count($links), count($entities), count($errors), $persist);
+
+        $output->writeln($msg);
+        return $msg;
     }
 }

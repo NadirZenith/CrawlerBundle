@@ -60,18 +60,26 @@ class Handler extends BaseHandler implements HandlerInterface
 
             $entity = $client->crawlToEntity($this->getNewEntity());
 
+            if (!$entity) {
+
+                $link->setHasError(true);
+                $link->setNote('error_crawling_entity', sprintf('entity with error: %s', $entity->getTitle()));
+            } else {
+                $link->setHasError(false);
+                $link->setNote('crawled_entity', sprintf('crawled entity: %s', $entity->getTitle()));
+            }
+
             if ($persist) {
 
                 $this->persistEntity($entity);
 
-                $link->setNote('created_entity', sprintf('created entity %d', $entity->getId()));
-                $link->setHasError(false);
-
+                $link->setNote('created_entity', sprintf('created entity: %d', $entity->getId()));
                 $this->persistLink($link);
 
                 $client->afterEntityPersist($entity);
             }
 
+            /* $client->setLink($link); */
             return $entity;
         } catch (UniqueConstraintViolationException $ex) {
 
@@ -82,8 +90,10 @@ class Handler extends BaseHandler implements HandlerInterface
         } catch (EntityClientException $ex) {
 
             $link->setNote('entity_client_exeption', $ex->getMessage());
-        }
+        } catch (\Buzz\Exception\RequestException $ex) {
 
+            $link->setNote('error_requesting_remote', $ex->getMessage());
+        }
         $link->setHasError(true);
 
         if ($persist) {

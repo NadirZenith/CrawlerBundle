@@ -100,9 +100,9 @@ class LinkCRUDController extends Controller
 
         if (!$entity) {
             $notes = $link->getNotes();
-            $error = end($notes);
+            $note = substr(end($notes), 0, 200);
 
-            $this->addFlash('sonata_flash_error', sprintf('Error creating entity: %s', $error));
+            $this->addFlash('sonata_flash_error', sprintf('Error creating entity: %s', $note));
         } else {
 
             $this->addFlash('sonata_flash_success', sprintf('Created entity with id %s', $entity->getId()));
@@ -117,16 +117,17 @@ class LinkCRUDController extends Controller
     public function crawlLinksAction(Request $request = null)
     {
         $persist = $request->get('persist', false);
+        $limit = $request->get('limit', 5);
 
         $linkManager = $this->getLinkManager();
 
         $handler = $this->getHandler();
-        $links = $linkManager->findLinksForProcess();
+        $links = $linkManager->findLinksForProcess($limit);
         $clientPool = $this->getClientPool();
 
         $errors = [];
         $entities = [];
-        ini_set('max_execution_time', 300);
+        ini_set('max_execution_time', 0);
         foreach ($links as $link) {
             $client = $clientPool->getEntityClientForLink($link);
 
@@ -135,14 +136,16 @@ class LinkCRUDController extends Controller
 
                 if (!$entity) {
                     $notes = $link->getNotes();
-                    $errors[] = end($notes);
+                    $errors[] = substr(end($notes), 0, 200);
                 } else {
                     $entities[] = $entity->getTitle();
                 }
             }
         }
 
-        $this->addFlash('sonata_flash_info', sprintf('Links: %s, Success: %s, Errors: %s', count($links), count($entities), count($errors)));
+        $flash = sprintf('<b>Links:</b> %s<br> <b>Success:</b> %s<br>%s <br><b>Errors:</b>%s<br>%s', count($links), count($entities), implode('<br>', $entities), count($errors), implode('<br> -', $errors));
+
+        $this->addFlash('sonata_flash_info', $flash);
 
         return new RedirectResponse($this->admin->generateUrl('list'));
     }

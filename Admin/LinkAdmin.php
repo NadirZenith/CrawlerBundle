@@ -30,16 +30,6 @@ class LinkAdmin extends Admin
     protected $linkManager;
     protected $maxPerPage = 300;
 
-    protected function configureRoutes(RouteCollection $collection)
-    {
-        // on top
-        $collection->add('crawl-indexes', 'crawl-indexes');
-        $collection->add('crawl-links', 'crawl-links');
-        $collection->add('crawl-url', 'crawl-url');
-        // on list
-        $collection->add('crawl-link', $this->getRouterIdParameter() . '/crawl');
-    }
-
     /**
      * Default values to the datagrid.
      *
@@ -50,6 +40,16 @@ class LinkAdmin extends Admin
         '_per_page' => 320,
         '_sort_order' => 'DESC',
     );
+
+    protected function configureRoutes(RouteCollection $collection)
+    {
+        // on top
+        $collection->add('crawl-indexes', 'crawl-indexes');
+        $collection->add('crawl-links', 'crawl-links');
+        $collection->add('crawl-url', 'crawl-url');
+        // on list
+        $collection->add('crawl-link', $this->getRouterIdParameter() . '/crawl');
+    }
 
     /**
      * {@inheritdoc}
