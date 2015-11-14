@@ -29,6 +29,7 @@ class LinkRepository extends EntityRepository
             ->select('l')
             ->where('l.processed = false')
             ->andWhere('l.hasError = false')
+            ->andWhere('l.skip = false')
         ;
 
         if ($limit) {
