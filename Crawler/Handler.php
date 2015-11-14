@@ -93,6 +93,10 @@ class Handler extends BaseHandler implements HandlerInterface
         } catch (\Buzz\Exception\RequestException $ex) {
 
             $link->setNote('error_requesting_remote', $ex->getMessage());
+        }catch (\Exception $ex) {
+
+            $link->setNote('exception', $ex->getMessage());
+            $link->setSkip(true);
         }
         $link->setHasError(true);
 
