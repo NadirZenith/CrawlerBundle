@@ -11,6 +11,7 @@ abstract class Link implements LinkInterface
     protected $url;
     protected $processed = false;
     protected $hasError = false;
+    protected $skip = false;
     protected $notes;
     protected $crawledAt;
 
@@ -80,6 +81,22 @@ abstract class Link implements LinkInterface
     public function setHasError($hasError)
     {
         $this->hasError = $hasError;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSkip()
+    {
+        return $this->skip;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setSkip($skip)
+    {
+        $this->skip = $skip;
     }
 
     /**

@@ -61,6 +61,7 @@ class LinkAdmin extends Admin
             ->add('url')
             ->add('processed')
             ->add('hasError')
+            ->add('skip')
             ->add('notes')
             ->add('crawledAt')
         ;
@@ -78,6 +79,7 @@ class LinkAdmin extends Admin
             ->add('url', 'url')
             ->add('processed')
             ->add('hasError')
+            ->add('skip')
             ->add('crawledAt')
             ->end()
 
@@ -91,9 +93,12 @@ class LinkAdmin extends Admin
     {
 
         $listMapper
-            ->addIdentifier('url')
+            ->addIdentifier('url', null, array(
+                'template' => 'NzCrawlerBundle:CRUD:list__identifier.html.twig'
+            ))
             ->add('processed', null)
             ->add('hasError', null, array('editable' => true))
+            ->add('skip', null, array('editable' => true))
             ->add('crawledAt')
             /*       custom actions     */
             ->add('_action', 'crawl', array(
@@ -117,6 +122,7 @@ class LinkAdmin extends Admin
             ->add('url')
             ->add('processed')
             ->add('hasError')
+            ->add('skip')
         ;
     }
 

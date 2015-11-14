@@ -65,6 +65,22 @@ interface LinkInterface
     public function setHasError($hasError);
 
     /**
+     * Get skip.
+     *
+     * @return bool $skip
+     */
+    public function getSkip();
+
+    /**
+     * If occurs any new error
+     *
+     * Set skip
+     *
+     * @param bool $skip
+     */
+    public function setSkip($skip);
+
+    /**
      * Set notes.
      *
      * @param string $notes
