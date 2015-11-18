@@ -20,6 +20,7 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Nz\CrawlerBundle\Model\LinkManagerInterface;
 use Sonata\AdminBundle\Route\RouteCollection;
+use Symfony\Component\Form\CallbackTransformer;
 
 class LinkAdmin extends Admin
 {
@@ -76,13 +77,30 @@ class LinkAdmin extends Admin
             ->with('Option', array(
                 'class' => 'col-md-8',
             ))
-            ->add('url', 'url')
-            ->add('processed')
-            ->add('hasError')
-            ->add('skip')
-            ->add('crawledAt')
+                ->add('url', 'url')
+                ->add('processed')
+                ->add('hasError')
+                ->add('skip')
+                ->add('crawledAt')
+                ->add('notes')
             ->end()
+        ;
+        
+        $formMapper->getFormBuilder()->get('notes')
+            ->addModelTransformer(new CallbackTransformer(
+                function ($dbNotes) {
+                $json = json_encode($dbNotes);
+                return $json;
+            }, function ($formNotes) {
 
+                if (empty($formNotes)) {
+                    return [];
+                }
+
+                $array = json_decode($formNotes, true);
+                return $array;
+            }
+            ))
         ;
     }
 
@@ -99,7 +117,6 @@ class LinkAdmin extends Admin
             ->add('processed', null)
             ->add('hasError', null, array('editable' => true))
             ->add('skip', null, array('editable' => true))
-            ->add('crawledAt')
             /*       custom actions     */
             ->add('_action', 'crawl', array(
                 'actions' => array(
