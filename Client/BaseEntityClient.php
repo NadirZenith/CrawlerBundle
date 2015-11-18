@@ -30,12 +30,20 @@ abstract class BaseEntityClient extends BaseClient implements EntityClientInterf
     protected $article_base_filter;
 
     /**
-     * @param Nz\CrawlerBundle\Model\LinkInterface
+     * Set profile item if not empty
      * 
-     * @return mixed The final item
+     * @param string    $item   The array key to store profile item value
+     * @param mixed     $value  The value for the profile item
+     * @param boolean   $filter Wether to filter the value
+     * 
+     * @return mixed The item
      */
     protected function setItem($item, $value, $filter = false)
     {
+        if (empty($value)) {
+            return;
+        }
+
         if ($filter) {
 
             $this->profile_items[$item] = $this->filterContent($value);
